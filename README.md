@@ -18,6 +18,7 @@ Tested with:
 - Delphi XE
 - Delphi 10.1.2 Berlin: 32bit and 64bit
 - Delphi 12.1 Athens: 32bit and 64bit
+- Delphi 13 Florence: 32bit and 64bit
 
 To use it:
 - Include the Stacktrace unit, by manually adding it to the top of the uses list in the dpr file.
@@ -26,7 +27,7 @@ To use it:
 - Under "Build Events", "Post-Build", add this command:
 		map2pdb.exe  "-include:0001;0002"  "$(OUTPUTDIR)\$(OUTPUTNAME).map"
 
-  You may want to use map2pdb with additional filters, as the PDBs gets very large, especially on 64bit.
+  You may want to use map2pdb with additional filters, as the PDBs gets very large.
 - Ship the PDB files together with the EXEs and DLLs, by putting them in the same directory.
 
 
@@ -37,12 +38,12 @@ Usage notes:
 TApplication.HandleException(), TCustomApplicationEvents.DoException(), TMultiCaster.DoException().
 
 - The CPU stack does not record *where the call came from* but stores *where to continue after the call*. This leads to an effect
-that can also be experienced in the Delphi debugger: Sometimes, the source line in the stack trace is the line with the next
+that can also be experienced in the Delphi debugger as also in Visual Studio: Sometimes, the source line in the stack trace is the line with the next
 statement that follows the actual call.
 
 - The Delphi runtime units (RTL, VCL, etc) are precompiled with {$StackFrames off} ({$W-}). Sometimes this leads to missing frames in
 the stack trace, since the debug engine has to guess how to interpret the stack. Since map2pdb only has the Delphi MAP file as
-input, the PDB file will most likely not contain "Frame Pointer Omission (FPO)" records, which would help the debug engine in
+input, the PDB file will not contain "Frame Pointer Omission (FPO)" records, which would help the debug engine in
 these cases (https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/symbols-and-symbol-files).
 
 - In SysUtils, there are two singleton exception objects stored in the private global variables "OutOfMemory" and "InvalidPointer".
